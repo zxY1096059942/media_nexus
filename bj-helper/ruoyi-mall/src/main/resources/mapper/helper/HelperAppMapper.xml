@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyl.helper.mapper.HelperAppMapper">
+
+    <resultMap type="HelperApp" id="HelperAppResult">
+        <result property="id" column="id"/>
+        <result property="appName" column="app_name"/>
+        <result property="appPageName" column="app_page_name"/>
+        <result property="appJsPath" column="app_js_path"/>
+        <result property="appApkUrl" column="app_apk_url"/>
+        <result property="taskTime" column="task_time"/>
+        <result property="status" column="status"/>
+        <result property="displayFlag" column="display_flag"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="orderNum" column="order_num"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time" />
+    </resultMap>
+
+    <sql id="selectHelperAppVo">
+        select id, app_name, app_page_name,task_time, app_js_path, app_apk_url, display_flag,status, del_flag, create_by, create_time, update_by, update_time, order_num, dept_id   from helper_app
+    </sql>
+
+    <select id="selectByEntity" parameterType="HelperApp" resultMap="HelperAppResult">
+        <include refid="selectHelperAppVo"/>
+        <where>
+            <if test="appName != null  and appName != ''"> and app_name like concat('%', #{appName}, '%')</if>
+            <if test="appPageName != null  and appPageName != ''"> and app_page_name like concat('%', #{appPageName}, '%')</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="displayFlag != null  and displayFlag != ''"> and display_flag = #{displayFlag}</if>
+            <if test="appApkUrl != null  and appApkUrl != ''"> and app_apk_url like concat('%', #{appApkUrl}, '%')</if>
+            <if test="appJsPath != null  and appJsPath != ''"> and app_js_path like concat('%', #{appJsPath}, '%')</if>
+            <if test="taskTime != null "> and task_time = #{taskTime}</if>
+
+        </where>
+    </select>
+
+    <update id="updateDelFlagByIds">
+        update helper_app set del_flag=1
+        <where>
+            id in <foreach collection="ids" open="(" item="it" close=")" separator=",">#{it}</foreach>
+        </where>
+    </update>
+    
+    <select id="getTotalBeforeNow" resultType="java.lang.Integer">
+        SELECT count(1) as appTotalNum from helper_app where  create_time &lt; Date(now())      
+    </select>
+    
+    <select id="getTotalNewYesterday" resultType="java.lang.Integer">
+        SELECT count(1) as appNewNum from helper_app where  create_time &gt;=  ADDDATE(DATE(NOW()), -1) and create_time &lt; Date(now())      
+    </select>
+    
+</mapper>

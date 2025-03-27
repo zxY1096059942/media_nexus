@@ -1,0 +1,50 @@
+{
+    "assets": [],
+    "build": {
+      "build_id": "43661E80-1",
+      "build_number": 1,
+      "build_time": 1632561972636,
+      "release": false
+    },
+    "encryptLevel": 0,
+    "useFeatures": [],
+    "icon": "res/icon.png",
+    "launchConfig": {
+      "displaySplash": true,
+      "hideLogs": false,
+      "splashIcon": "res/splashIcon.png",
+      "splashText": "萤火科技",
+      "stableMode": false
+    },
+    "main": "main.js",
+    "name": "萤火",
+    "optimization": {
+      "removeOpenCv": true,
+      "unusedResources": false
+    },
+    "packageName": "com.android.web",
+    "scripts": {},
+    "versionCode": 1,
+    "versionName": "0.1",
+    "ignore": ["build", "node_modules"],
+    "permissionConfig": {
+      "manifestPermissions": [
+        "com.android.launcher.permission.INSTALL_SHORTCUT",
+        "android.permission.MANAGE_EXTERNAL_STORAGE",
+        "android.permission.INTERNET",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.ACCESS_SUPERUSER"
+      ],
+      "requestListOnStartup": [
+        "android.permission.MANAGE_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.ACCESS_SUPERUSER"
+      ]
+    }
+  }
+  

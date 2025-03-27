@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyl.helper.mapper.HelperAppReportMapper">
+    
+    <resultMap type="HelperAppReport" id="HelperAppReportResult">
+        <result property="id" column="id"/>
+        <result property="type" column="type"/>
+        <result property="code" column="code"/>
+        <result property="reportData" column="report_data"/>
+        <result property="dataTime" column="data_time"/>
+        <result property="status" column="status"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="memberId" column="member_id"/>
+        <result property="deviceid" column="deviceId"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="orderNum" column="order_num"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time" />
+        <result property="handleStatus" column="handle_status" />
+    </resultMap>
+
+    <sql id="selectHelperAppReportVo">
+        select id, type, code, report_data, data_time, status, del_flag, member_id, deviceId, create_by, create_time, update_by, update_time, order_num, dept_id ,handle_status  from helper_app_report
+    </sql>
+
+    <select id="selectByEntity" parameterType="HelperAppReport" resultMap="HelperAppReportResult">
+        <include refid="selectHelperAppReportVo"/>
+        <where>  
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="reportData != null  and reportData != ''"> and report_data = #{reportData}</if>
+            <if test="dataTime != null "> and data_time = #{dataTime}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="memberId != null "> and member_id = #{memberId}</if>
+            <if test="deviceid != null "> and deviceId = #{deviceid}</if>
+            <if test="orderNum != null "> and order_num = #{orderNum}</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+            <if test="handleStatus != null "> and handle_status = #{handleStatus}</if>
+        </where>
+    </select>
+
+    <select id="selectUnHandleReport" parameterType="HelperAppReport" resultMap="HelperAppReportResult">
+        <include refid="selectHelperAppReportVo"/>
+        <where>  
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="dataTime != null "> and data_time = #{dataTime}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="memberId != null "> and member_id = #{memberId}</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+            <if test="codes != null "> 
+              and code in <foreach collection="codes" open="(" item="it" close=")" separator=",">#{it}</foreach>
+            </if>
+            <if test="handleStatus != null "> and handle_status = #{handleStatus}</if>
+            and create_time &lt; now()
+        </where>
+    </select>
+    
+    <update id="updateDelFlagByIds">
+        update helper_app_report set del_flag=1
+        <where>
+            id in <foreach collection="ids" open="(" item="it" close=")" separator=",">#{it}</foreach>
+        </where>
+    </update>
+    
+    <update id="updateHandleFlagByIds">
+        update helper_app_report set handle_status=1 ,update_time=now(),update_by=2
+        <where>
+            id in <foreach collection="ids" open="(" item="it" close=")" separator=",">#{it}</foreach>
+        </where>
+    </update>
+    <select id="getTotalActiveYesterday" resultType="java.lang.Integer">
+        SELECT count(distinct(member_id)) from helper_app_report where  create_time &gt;=  ADDDATE(DATE(NOW()), -1) and create_time &lt; Date(now())      
+    </select>
+</mapper>

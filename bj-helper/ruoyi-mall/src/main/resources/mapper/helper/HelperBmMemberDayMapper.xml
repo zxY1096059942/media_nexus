@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyl.helper.mapper.HelperBmMemberDayMapper">
+    
+    <resultMap type="HelperBmMemberDay" id="HelperBmMemberDayResult">
+        <result property="id" column="id"/>
+        <result property="recordYearMonth" column="record_year_month"/>
+        <result property="recordDay" column="record_day"/>
+        <result property="memberTotalNum" column="member_total_num"/>
+        <result property="memberNewNum" column="member_new_num"/>
+        <result property="memberActiveNum" column="member_active_num"/>
+        <result property="memberAnomaliesNum" column="member_anomalies_num"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectHelperBmMemberDayVo">
+        select id, record_year_month, record_day, member_total_num, member_new_num, member_active_num, member_anomalies_num, update_time, create_time  from helper_bm_member_day
+    </sql>
+
+    <select id="selectByEntity" parameterType="HelperBmMemberDay" resultMap="HelperBmMemberDayResult">
+        <include refid="selectHelperBmMemberDayVo"/>
+        <where>  
+            <if test="recordYearMonth != null "> and record_year_month = #{recordYearMonth}</if>
+            <if test="recordDay != null "> and record_day = #{recordDay}</if>
+            <if test="memberTotalNum != null "> and member_total_num = #{memberTotalNum}</if>
+            <if test="memberNewNum != null "> and member_new_num = #{memberNewNum}</if>
+            <if test="memberActiveNum != null "> and member_active_num = #{memberActiveNum}</if>
+            <if test="memberAnomaliesNum != null "> and member_anomalies_num = #{memberAnomaliesNum}</if>
+        </where>
+    </select>
+
+    <update id="updateDelFlagByIds">
+        update helper_bm_member_day set del_flag=1
+        <where>
+            id in <foreach collection="ids" open="(" item="it" close=")" separator=",">#{it}</foreach>
+        </where>
+    </update>
+    
+     <insert id="insertHelperBmMemberDays">
+      insert into helper_bm_member_day ( record_year_month, record_day, member_total_num, member_new_num, member_active_num, member_anomalies_num)
+      values 
+      <foreach collection="helperBmMemberDayList" item="mad" separator=",">
+       (#{mad.recordYearMonth},#{mad.recordDay},#{mad.memberTotalNum},#{mad.memberNewNum},#{mad.memberActiveNum},#{mad.memberAnomaliesNum})
+      </foreach>    
+    </insert>
+    
+     <delete id="deleteByYearMonthDay">
+        delete from helper_bm_member_day 
+        <where>
+            record_year_month =#{yearMonthDay}
+        </where>
+    </delete>
+    
+</mapper>

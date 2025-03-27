@@ -1,0 +1,27 @@
+ALTER TABLE sys_job ADD COLUMN plat VARCHAR(50);
+ALTER TABLE helper_app_member ADD COLUMN member_id BIGINT;
+缺 
+
+CREATE TABLE helper_app_member (
+    id BIGINT PRIMARY KEY COMMENT 'ID',
+    app_name VARCHAR(255) COMMENT '应用名称',
+    app_page_name VARCHAR(255) COMMENT '应用页面名称',
+    task_time INT COMMENT '任务时间',
+    order_num INT COMMENT '排序号',
+    app_js_path VARCHAR(255) COMMENT '应用JS路径',
+    app_apk_url VARCHAR(255) COMMENT '应用APK下载URL',
+    display_flag VARCHAR(1) COMMENT '显示标志',
+    nickname VARCHAR(255) COMMENT '昵称',
+    phone_hidden VARCHAR(255) COMMENT '隐藏前三位后四位的手机号'
+) COMMENT '助手应用成员表';
+
+ALTER TABLE helper_app_member ADD COLUMN member_id BIGINT;
+ALTER TABLE helper_app_member ADD COLUMN app_id BIGINT;
+ALTER TABLE helper_app_member ADD COLUMN status VARCHAR(5);
+ALTER TABLE helper_app_member ADD COLUMN del_flag VARCHAR(5);
+ALTER TABLE helper_app_member ADD COLUMN dept_id VARCHAR(5);
+
+ALTER TABLE helper_app_member ADD COLUMN create_by BIGINT;
+ALTER TABLE helper_app_member ADD COLUMN create_time TIMESTAMP;
+ALTER TABLE helper_app_member ADD COLUMN update_by BIGINT;
+ALTER TABLE helper_app_member ADD COLUMN update_time TIMESTAMP;

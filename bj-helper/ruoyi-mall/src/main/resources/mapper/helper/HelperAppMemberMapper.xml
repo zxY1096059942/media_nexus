@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyl.helper.mapper.HelperAppMemberMapper">
+
+    <resultMap type="HelperAppMember" id="HelperAppMemberResult">
+        <result property="id" column="id"/>
+        <result property="appId" column="app_id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="status" column="status"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="orderNum" column="order_num"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time" />
+    </resultMap>
+
+    <sql id="selectHelperAppMemberVo">
+        select id, app_id, member_id, status, del_flag, create_by, create_time, update_by, update_time, order_num, dept_id   from helper_app_member
+    </sql>
+
+    <select id="selectByEntity" parameterType="HelperAppMember" resultMap="HelperAppMemberResult">
+        <include refid="selectHelperAppMemberVo"/>
+        <where>
+            <if test="appId != null "> and app_id = #{appId}</if>
+            <if test="memberId != null "> and member_id = #{memberId}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="orderNum != null "> and order_num = #{orderNum}</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+        </where>
+    </select>
+
+    <delete id="batchDeleteByIds">
+        delete from helper_app_member
+        <where>
+            id in <foreach collection="ids" open="(" item="it" close=")" separator=",">#{it}</foreach>
+        </where>
+    </delete>
+
+    <delete id="batchDeleteByMemberId">
+        delete from helper_app_member
+        <where>
+            member_id = #{memberId}
+            and app_id in <foreach collection="appIds" open="(" item="it" close=")" separator=",">#{it}</foreach>
+        </where>
+    </delete>
+    
+<!--    <update id="updateDelFlagByIds">-->
+<!--        update helper_app_member set del_flag=1-->
+<!--        <where>-->
+<!--            id in <foreach collection="ids" open="(" item="it" close=")" separator=",">#{it}</foreach>-->
+<!--        </where>-->
+<!--    </update>-->
+
+
+
+
+    <select id="selectByMemberList" parameterType="com.cyl.helper.domain.query.HelperAppMemberQuery" resultType="com.cyl.helper.domain.vo.HelperAppMemberVO">
+        SELECT a.id, a.app_name,a.app_page_name,a.task_time,a.app_js_path,a.app_apk_url,a.display_flag,a.order_num,m.nickname,m.phone_hidden FROM `helper_app_member` am LEFT JOIN helper_app a ON a.id=am.app_id LEFT JOIN ums_member m ON m.id=am.member_id
+        <where>
+            <if test="appId != null "> and am.app_id = #{appId}</if>
+            <if test="memberId != null "> and am.member_id = #{memberId}</if>
+        </where>
+    </select>
+
+    <insert id="bacthInsert" parameterType="list">
+        insert into helper_app_member
+        (app_id, member_id, create_time)
+        values
+        <foreach collection="list" item="item" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{item.appId,jdbcType=BIGINT},
+                #{item.memberId,jdbcType=BIGINT},
+                CURRENT_TIMESTAMP,
+            </trim>
+        </foreach>
+    </insert>
+
+</mapper>

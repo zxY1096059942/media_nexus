@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyl.helper.mapper.HelperBmMemberTaskDayMapper">
+    
+    <resultMap type="HelperBmMemberTaskDay" id="HelperBmMemberTaskDayResult">
+        <result property="id" column="id"/>
+        <result property="recordYearMonth" column="record_year_month"/>        
+        <result property="memberId" column="member_id"/>
+        <result property="appId" column="app_id"/>
+        <result property="taskId" column="task_id"/>
+        <result property="taskName" column="task_name"/>
+        <result property="taskType" column="task_type"/>
+        <result property="num" column="num"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectHelperBmMemberTaskDayVo">
+        select id, record_year_month, member_id, app_id, task_id,task_name,task_type,num, update_time, create_time  from helper_bm_member_task_day
+    </sql>
+
+    <select id="selectByEntity" parameterType="HelperBmMemberTaskDay" resultMap="HelperBmMemberTaskDayResult">
+        <include refid="selectHelperBmMemberTaskDayVo"/>
+        <where>  
+            <if test="recordYearMonth != null "> and record_year_month = #{recordYearMonth}</if>
+            <if test="recordDay != null "> and record_day = #{recordDay}</if>
+            <if test="memberId != null "> and member_id = #{memberId}</if>
+            <if test="appId != null "> and app_id = #{appId}</if>
+            <if test="taskId != null "> and task_id = #{taskId}</if>
+            <if test="taskType != null "> and task_type = #{taskType}</if>
+            <if test="taskName != null "> and task_name = #{taskName}</if>
+        </where>
+    </select>
+
+    <delete id="deleteByIds">
+        delete from helper_bm_member_task_day
+        <where>
+            id in <foreach collection="ids" open="(" item="it" close=")" separator=",">#{it}</foreach>
+        </where>
+    </delete>
+    <delete id="deleteByYearMonthDay">
+        delete from helper_bm_member_task_day 
+        <where>
+            record_year_month =#{yearMonthDay}
+        </where>
+    </delete>
+    <insert id="inserthelperBmMemberTaskDays" >
+      insert into helper_bm_member_task_day ( record_year_month, member_id, app_id, task_id, task_name, task_type,num, create_time)
+      values 
+      <foreach collection="helperBmMemberTaskDayList" item="mad" separator=",">
+       (#{mad.recordYearMonth},#{mad.memberId},#{mad.appId},#{mad.taskId},#{mad.taskName},#{mad.taskType},#{mad.num},#{mad.createTime})
+      </foreach>    
+    </insert>
+</mapper>

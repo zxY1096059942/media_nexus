@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyl.manager.ums.mapper.MemberCartMapper">
+    
+    <resultMap type="MemberCart" id="MemberCartResult">
+        <result property="id" column="id"/>
+        <result property="status" column="status"/>
+        <result property="memberId" column="member_id"/>
+        <result property="productId" column="product_id"/>
+        <result property="pic" column="pic"/>
+        <result property="skuId" column="sku_id"/>
+        <result property="productName" column="product_name"/>
+        <result property="spData" column="sp_data"/>
+        <result property="quantity" column="quantity"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time" />
+    </resultMap>
+
+    <sql id="selectMemberCartVo">
+        select id, status, member_id, product_id, pic, sku_id, product_name, sp_data, quantity, create_by, create_time, update_by, update_time   from ums_member_cart
+    </sql>
+
+    <select id="selectByEntity" parameterType="MemberCart" resultMap="MemberCartResult">
+        <include refid="selectMemberCartVo"/>
+        <where>  
+            <if test="status != null "> and status = #{status}</if>
+            <if test="memberId != null "> and member_id = #{memberId}</if>
+            <if test="productId != null "> and product_id = #{productId}</if>
+            <if test="pic != null  and pic != ''"> and pic = #{pic}</if>
+            <if test="skuId != null "> and sku_id = #{skuId}</if>
+            <if test="productName != null  and productName != ''"> and product_name like concat('%', #{productName}, '%')</if>
+            <if test="spData != null  and spData != ''"> and sp_data = #{spData}</if>
+            <if test="quantity != null "> and quantity = #{quantity}</if>
+        </where>
+    </select>
+    <select id="selectByPage" resultType="com.cyl.manager.ums.domain.vo.MemberCartVO">
+        select
+        a.id,
+        a.member_id,
+        a.product_id,
+        a.pic,
+        a.sku_id,
+        a.product_name,
+        a.sp_data,
+        a.quantity,
+        a.create_time,
+        b.phone_hidden,
+        b.nickname,
+        b.mark
+        from ums_member_cart a
+        inner join ums_member b on a.member_id=b.id
+        <where>
+            <if test="phone != null and phone != ''">
+                b.phone_encrypted=#{phone}
+            </if>
+            <if test="productName != null and productName != ''">
+                a.product_name=#{productName}
+            </if>
+        </where>
+        order by a.create_time desc
+    </select>
+    <select id="statAddCount" resultType="java.lang.Integer">
+        select
+            IFNULL(count(distinct member_id), 0)
+        from ums_member_cart
+        where create_time between #{startTime} and #{endTime}
+    </select>
+</mapper>

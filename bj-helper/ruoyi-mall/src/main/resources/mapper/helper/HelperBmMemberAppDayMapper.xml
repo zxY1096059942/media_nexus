@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyl.helper.mapper.HelperBmMemberAppDayMapper">
+    
+    <resultMap type="HelperBmMemberAppDay" id="HelperBmMemberAppDayResult">
+        <result property="id" column="id"/>
+        <result property="recordYearMonth" column="record_year_month"/>
+        <result property="recordDay" column="record_day"/>
+        <result property="memberId" column="member_id"/>
+        <result property="appId" column="app_id"/>
+        <result property="goldCoinNum" column="gold_coin_num"/>
+        <result property="redPacketAmount" column="red_packet_amount"/>
+        <result property="cashOutAmount" column="cash_out_amount"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectHelperBmMemberAppDayVo">
+        select id, record_year_month, record_day, member_id, app_id, gold_coin_num, red_packet_amount, cash_out_amount, update_time, create_time  from helper_bm_member_app_day
+    </sql>
+
+    <select id="selectByEntity" parameterType="HelperBmMemberAppDay" resultMap="HelperBmMemberAppDayResult">
+        <include refid="selectHelperBmMemberAppDayVo"/>
+        <where>  
+            <if test="recordYearMonth != null "> and record_year_month = #{recordYearMonth}</if>
+            <if test="recordDay != null "> and record_day = #{recordDay}</if>
+            <if test="memberId != null "> and member_id = #{memberId}</if>
+            <if test="appId != null "> and app_id = #{appId}</if>
+            <if test="goldCoinNum != null "> and gold_coin_num = #{goldCoinNum}</if>
+            <if test="redPacketAmount != null "> and red_packet_amount = #{redPacketAmount}</if>
+            <if test="cashOutAmount != null "> and cash_out_amount = #{cashOutAmount}</if>
+        </where>
+    </select>
+
+    <update id="updateDelFlagByIds">
+        update helper_bm_member_app_day set del_flag=1
+        <where>
+            id in <foreach collection="ids" open="(" item="it" close=")" separator=",">#{it}</foreach>
+        </where>
+    </update>
+    
+    <insert id="insertHelperBmMemberAppDays" >
+      insert into helper_bm_member_app_day ( record_year_month, record_day, member_id, app_id, gold_coin_num, red_packet_amount, cash_out_amount, create_time)
+      values 
+      <foreach collection="helperBmMemberAppDayList" item="mad" separator=",">
+       (#{mad.recordYearMonth},#{mad.recordDay},#{mad.memberId},#{mad.appId},#{mad.goldCoinNum},#{mad.redPacketAmount},#{mad.cashOutAmount},#{mad.createTime})
+      </foreach>
+    
+    </insert>
+    <delete id="deleteByYearMonthDay">
+        delete from helper_bm_member_app_day 
+        <where>
+            record_year_month =#{yearMonthDay}
+        </where>
+    </delete>
+    <insert id="insertMemberAppDaysForDate" >
+      insert into helper_bm_member_app_day ( record_year_month, record_day, member_id, app_id, gold_coin_num, create_time)
+      SELECT a.record_year_month,SUBSTRING(CONVERT(a.record_year_month, CHAR),7),a.member_id,a.app_id,sum(a.num),now()
+      from helper_bm_member_task_day a GROUP BY a.record_year_month,a.member_id,a.app_id having a.record_year_month= #{date}    
+    </insert>
+    
+</mapper>
